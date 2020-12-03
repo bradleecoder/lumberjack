@@ -30,13 +30,14 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
 )
 
 const (
-	backupTimeFormat = "2006-01-02T15-04-05.000"
+	backupTimeFormat = "2006-01-02-15-04-05"
 	compressSuffix   = ".gz"
 	defaultMaxSize   = 100
 )
@@ -241,6 +242,30 @@ func (l *Logger) openNew() error {
 	return nil
 }
 
+func filterDirsGlob(dir, pattern string) ([]string, error) {
+	return filepath.Glob(filepath.Join(dir, pattern))
+}
+
+func findMaxIndex(prefix, dir, suffix, pattern string) (maxIndex int, err error) {
+	indexes, err := filterDirsGlob(dir, pattern)
+	if err != nil {
+		return
+	}
+
+	for _, filename := range indexes {
+		index := filename[len(prefix)+1+len(backupTimeFormat)+1 : len(filename)-len(suffix)]
+		fmt.Println("index", index)
+		indexInt, err := strconv.ParseInt(index, 10, 32)
+		if err != nil {
+			return 0, err
+		}
+		if indexInt > int64(maxIndex) {
+			maxIndex = int(indexInt)
+		}
+	}
+	return
+}
+
 // backupName creates a new filename from the given name, inserting a timestamp
 // between the filename and the extension, using the local time if requested
 // (otherwise UTC).
@@ -253,9 +278,14 @@ func backupName(name string, local bool) string {
 	if !local {
 		t = t.UTC()
 	}
-
+	pattern := prefix + "-*.*" + ext
+	fmt.Println(pattern)
+	maxIndex, err := findMaxIndex(prefix, dir, ext, pattern)
+	if err != nil {
+		return ""
+	}
 	timestamp := t.Format(backupTimeFormat)
-	return filepath.Join(dir, fmt.Sprintf("%s-%s%s", prefix, timestamp, ext))
+	return filepath.Join(dir, fmt.Sprintf("%s-%s.%d%s", prefix, timestamp, maxIndex+1, ext))
 }
 
 // openExistingOrNew opens the logfile if it exists and if the current write

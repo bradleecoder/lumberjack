@@ -11,8 +11,9 @@ import (
 	"testing"
 	"time"
 
+	yaml "gopkg.in/yaml.v2"
+
 	"github.com/BurntSushi/toml"
-	"gopkg.in/yaml.v2"
 )
 
 // !!!NOTE!!!
@@ -28,6 +29,10 @@ var fakeCurrentTime = time.Now()
 
 func fakeTime() time.Time {
 	return fakeCurrentTime
+}
+
+func TestIndex(t *testing.T) {
+	fmt.Println(backupName("s.log", true))
 }
 
 func TestNewFile(t *testing.T) {

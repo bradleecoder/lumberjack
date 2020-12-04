@@ -254,7 +254,13 @@ func findMaxIndex(prefix, dir, suffix, pattern string) (maxIndex int, err error)
 
 	for _, filename := range indexes {
 		fmt.Println(filename, dir, prefix, len(dir+"/"+prefix)+1+len(backupTimeFormat)+1, len(filename)-len(suffix))
-		index := filename[len(dir+"/"+prefix)+1+len(backupTimeFormat)+1 : len(filename)-len(suffix)]
+		var index string
+		if dir != "." {
+			index = filename[len(dir+"/"+prefix)+1+len(backupTimeFormat)+1 : len(filename)-len(suffix)]
+		} else {
+			index = filename[len(prefix)+1+len(backupTimeFormat)+1 : len(filename)-len(suffix)]
+		}
+
 		indexInt, err := strconv.ParseInt(index, 10, 32)
 		if err != nil {
 			return 0, err

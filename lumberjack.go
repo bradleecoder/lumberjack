@@ -37,7 +37,7 @@ import (
 )
 
 const (
-	backupTimeFormat = "2006-01-02-15-04-05"
+	backupTimeFormat = "2006-01-02-15-04-05.000"
 	compressSuffix   = ".gz"
 	defaultMaxSize   = 100
 )

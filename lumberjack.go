@@ -253,7 +253,6 @@ func findMaxIndex(prefix, dir, suffix, pattern string) (maxIndex int, err error)
 	}
 
 	for _, filename := range indexes {
-		fmt.Println(filename, dir, prefix, len(dir+"/"+prefix)+1+len(backupTimeFormat)+1, len(filename)-len(suffix))
 		var index string
 		if dir != "." {
 			index = filename[len(dir+"/"+prefix)+1+len(backupTimeFormat)+1 : len(filename)-len(suffix)]
@@ -284,14 +283,12 @@ func backupName(name string, local bool) string {
 	if !local {
 		t = t.UTC()
 	}
-	//backupTimeFormat = "2006-01-02-15-04-05.000"
-	//waterdebit_error-2020-12-04-06-03-27.123.1.log
 	pattern := prefix + "-*.*.*" + ext
 	maxIndex, err := findMaxIndex(prefix, dir, ext, pattern)
 	if err != nil {
 		return ""
 	}
-	timestamp := t.Format(backupTimeFormat)
+	timestamp := t.Local().Format(backupTimeFormat)
 	return filepath.Join(dir, fmt.Sprintf("%s-%s.%d%s", prefix, timestamp, maxIndex+1, ext))
 }
 

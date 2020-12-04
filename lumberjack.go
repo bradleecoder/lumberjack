@@ -253,6 +253,7 @@ func findMaxIndex(prefix, dir, suffix, pattern string) (maxIndex int, err error)
 	}
 
 	for _, filename := range indexes {
+		fmt.Println(filename, prefix, len(backupTimeFormat), len(prefix)+1+len(backupTimeFormat)+1, len(filename)-len(suffix), suffix)
 		index := filename[len(prefix)+1+len(backupTimeFormat)+1 : len(filename)-len(suffix)]
 		fmt.Println("index", index)
 		indexInt, err := strconv.ParseInt(index, 10, 32)

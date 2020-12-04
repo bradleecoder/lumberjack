@@ -278,7 +278,6 @@ func backupName(name string, local bool) string {
 		t = t.UTC()
 	}
 	pattern := prefix + "-*.*" + ext
-	fmt.Println(pattern)
 	maxIndex, err := findMaxIndex(prefix, dir, ext, pattern)
 	if err != nil {
 		return ""

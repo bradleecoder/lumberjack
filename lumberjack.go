@@ -277,7 +277,9 @@ func backupName(name string, local bool) string {
 	if !local {
 		t = t.UTC()
 	}
-	pattern := prefix + "-*.*" + ext
+	//backupTimeFormat = "2006-01-02-15-04-05.000"
+	//waterdebit_error-2020-12-04-06-03-27.123.1.log
+	pattern := prefix + "-*.*.*" + ext
 	maxIndex, err := findMaxIndex(prefix, dir, ext, pattern)
 	if err != nil {
 		return ""
